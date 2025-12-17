@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Gs_Contability")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eabfada84d15026f663bb6cda3a1fa9cec037bf2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Gs_Contability")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Gs_Contability")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

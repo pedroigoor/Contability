@@ -33,5 +33,5 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.RegisterMiddlewares();
 app.Run();

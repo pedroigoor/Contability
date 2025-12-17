@@ -19,7 +19,7 @@ namespace Gs_Contability.Repositories.Users
         public async Task<User> CreateAsync(User model)
         {
             _context.Users.Add(model);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return model;
         }
 
@@ -59,6 +59,12 @@ namespace Gs_Contability.Repositories.Users
             _context.Users.Update(model);
             _context.SaveChanges();
             return model;
+        }
+
+        public async Task<bool> EmailExistsAsync(string email)
+        {
+            return await _context.Users
+                .AnyAsync(u => u.Email == email);
         }
     }
 }

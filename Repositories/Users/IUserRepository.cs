@@ -4,5 +4,7 @@ namespace Gs_Contability.Repositories.Users
 {
     public interface IUserRepository : ICrudRespositoryNoFilter<User, int>
     {
+        Task<bool> EmailExistsAsync(string email);
+
     }
 }

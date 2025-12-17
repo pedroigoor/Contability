@@ -2,6 +2,7 @@
 
 using Gs_Contability.Dto.Users;
 using Gs_Contability.Entities;
+using Gs_Contability.Excepitons;
 using Gs_Contability.Repositories.Common.Pagination;
 using Gs_Contability.Repositories.Users;
 
@@ -20,6 +21,11 @@ namespace Gs_Contability.Services.Users
         }
         public async Task<UserResponseDTO> CreateAsync(UserRequestDTO modelRequest)
         {
+            var emailExists = await _userRepository.EmailExistsAsync(modelRequest.Email);
+
+            if (emailExists)
+                throw new GernericException("Email já cadastrado");
+
             var model = _mapper.Map<User>(modelRequest);
             var createdModel = await _userRepository.CreateAsync(model);
             return _mapper.Map<UserResponseDTO>(createdModel);
@@ -57,7 +63,7 @@ namespace Gs_Contability.Services.Users
         {
             if (!_userRepository.ExistsById(id))
             {
-                //throw new ModelNotFoundException("Aeronave não encontrada");
+                throw new ModelNotFoundException("Usuario não encontrado");
             }
         }
 

@@ -1,0 +1,6 @@
+@Gs_Contability_HostAddress = http://localhost:5072
+
+GET {{Gs_Contability_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

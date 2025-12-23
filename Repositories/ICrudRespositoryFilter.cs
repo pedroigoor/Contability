@@ -1,5 +1,4 @@
-﻿
-using Gs_Contability.Repositories.Common.Pagination;
+﻿using Gs_Contability.Repositories.Common.Pagination;
 
 namespace Gs_Contability.Repositories
 {

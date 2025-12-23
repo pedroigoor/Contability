@@ -5,11 +5,11 @@ namespace Gs_Contability.Repositories
 {
     public interface ICrudRespositoryNoFilter<Model, Key>
     {
-        bool ExistsById(Key key);
-        PagedResult<Model> FindAllPaged(int page, int size);
+        Task<bool> ExistsByIdAsync(Key key);
+        Task<PagedResult<Model>> FindAllPagedAsync(int page, int size);
         Task<Model> CreateAsync(Model model);
-        Model? FindById(Key key);
-        Task<Model> Update(Model model);
-        void DeleteById(Key key);
+        Task<Model?> FindByIdAsync(Key key);
+        Task<Model> UpdateAsync(Model model);
+        Task DeleteByIdAsync(Key key);
     }
 }

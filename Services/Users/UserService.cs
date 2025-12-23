@@ -38,43 +38,66 @@ namespace Gs_Contability.Services.Users
 
         }
 
-        public void DeleteById(int id)
+        public async Task DeleteById(int id)
         {
-            ExistsById(id);
-            _userRepository.DeleteById(id);
+            await ExistsById(id);
+            await _userRepository.DeleteByIdAsync(id);
         }
 
-        public PagedResult<UserResponseDTO> FindAll(int page, int size)
+        public async Task<PagedResult<UserResponseDTO>> FindAll(int page, int size)
         {
-            var pagedUsers = _userRepository.FindAllPaged(page, size);
+            var pagedUsers = await _userRepository.FindAllPagedAsync(page, size);
 
             return _mapper.Map<PagedResult<UserResponseDTO>>(pagedUsers);
 
         }
 
-        public UserResponseDTO FindById(int id)
+        public async Task<UserResponseDTO> FindById(int id)
         {
-            ExistsById(id);
+            await ExistsById(id);
 
-            var model = _userRepository.FindById(id);
+            var model = await _userRepository.FindByIdAsync(id);
 
             return _mapper.Map<UserResponseDTO>(model);
         }
 
         public async Task<UserResponseDTO> UpdateById(int id, UserRequestDTO modelRequest)
         {
-            ExistsById(id);
+            await ExistsById(id);
+
+            // check email uniqueness if changed
+            var existing = await _userRepository.FindByIdAsync(id);
+            if (existing == null)
+                throw new ModelNotFoundException("Usuario não encontrado");
+
+            if (!string.Equals(existing.Email, modelRequest.Email, StringComparison.OrdinalIgnoreCase))
+            {
+                var emailExists = await _userRepository.EmailExistsAsync(modelRequest.Email);
+                if (emailExists)
+                    throw new GernericException("Email já cadastrado");
+            }
 
             var jobToUpdate = _mapper.Map<User>(modelRequest);
             jobToUpdate.Id = id;
-            var updatedJob = await _userRepository.Update(jobToUpdate);
+
+            // only hash if password was provided (not empty)
+            if (!string.IsNullOrWhiteSpace(modelRequest.PasswordHash))
+            {
+                jobToUpdate.PasswordHash = BCrypt.Net.BCrypt.HashPassword(modelRequest.PasswordHash);
+            }
+            else
+            {
+                jobToUpdate.PasswordHash = existing.PasswordHash; // preserve existing
+            }
+
+            var updatedJob = await _userRepository.UpdateAsync(jobToUpdate);
             return _mapper.Map<UserResponseDTO>(updatedJob);
 
         }
 
-        private void ExistsById(int id)
+        private async Task ExistsById(int id)
         {
-            if (!_userRepository.ExistsById(id))
+            if (!await _userRepository.ExistsByIdAsync(id))
             {
                 throw new ModelNotFoundException("Usuario não encontrado");
             }

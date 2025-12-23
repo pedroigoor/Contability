@@ -23,41 +23,45 @@ namespace Gs_Contability.Repositories.Users
             return model;
         }
 
-        public void DeleteById(int key)
+        public async Task DeleteByIdAsync(int key)
         {
-            var aluno = _context.Users.Find(key);
+            var aluno = await _context.Users.FindAsync(key);
             if (aluno != null)
             {
                 _context.Users.Remove(aluno);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 
-        public bool ExistsById(int key)
+        public async Task<bool> ExistsByIdAsync(int key)
         {
-            return _context.Users.Any(e => e.Id == key);
+            return await _context.Users.AnyAsync(e => e.Id == key);
         }
 
-        public PagedResult<User> FindAllPaged(int page, int size)
+        public async Task<PagedResult<User>> FindAllPagedAsync(int page, int size)
         {
-            var totalElements = _context.Users.Count();
-            var items = _context.Users
+            var totalElements = await _context.Users
+         .AsNoTracking()
+         .CountAsync();
+
+            var items = await _context.Users
+                .AsNoTracking()
                 .Skip((page - 1) * size)
                 .Take(size)
-                .ToList();
+                .ToListAsync();
 
             return new PagedResult<User>(items, page, size, totalElements);
         }
 
-        public User? FindById(int key)
+        public async Task<User?> FindByIdAsync(int key)
         {
-            return _context.Users.AsNoTracking().FirstOrDefault(a => a.Id == key);
+            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(a => a.Id == key);
         }
 
-        public async Task<User> Update(User model)
+        public async Task<User> UpdateAsync(User model)
         {
             _context.Users.Update(model);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return model;
         }
 

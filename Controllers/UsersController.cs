@@ -22,18 +22,18 @@ namespace Gs_Contability.Controllers
 
         // GET: api/<UsersController>
         [HttpGet]
-        public IActionResult FindAll([FromQuery] int page = 1,
+        public async Task<IActionResult> FindAll([FromQuery] int page = 1,
                                  [FromQuery] int size = 10)
         {
-            var body = _userService.FindAll(page, size);
+            var body = await _userService.FindAll(page, size);
             return Ok(body);
         }
 
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        public IActionResult FindById([FromRoute] int id)
+        public async Task<IActionResult> FindById([FromRoute] int id)
         {
-            return Ok(_userService.FindById(id));
+            return Ok(await _userService.FindById(id));
         }
 
         // POST api/<UsersController>
@@ -57,9 +57,9 @@ namespace Gs_Contability.Controllers
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _userService.DeleteById(id);
+            await _userService.DeleteById(id);
             return NoContent();
         }
     }

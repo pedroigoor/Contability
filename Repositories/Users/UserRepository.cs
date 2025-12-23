@@ -54,7 +54,7 @@ namespace Gs_Contability.Repositories.Users
             return _context.Users.AsNoTracking().FirstOrDefault(a => a.Id == key);
         }
 
-        public User Update(User model)
+        public async Task<User> Update(User model)
         {
             _context.Users.Update(model);
             _context.SaveChanges();

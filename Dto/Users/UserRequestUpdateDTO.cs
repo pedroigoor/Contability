@@ -1,6 +1,6 @@
 ﻿namespace Gs_Contability.Dto.Users
 {
-    public class UserRequestDTO
+    public class UserRequestUpdateDTO
     {
        
         public string Username { get; set; } = null!;

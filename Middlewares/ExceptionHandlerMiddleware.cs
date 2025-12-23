@@ -1,4 +1,5 @@
-﻿using Gs_Contability.Common.Dto;
+﻿using FluentValidation;
+using Gs_Contability.Common.Dto;
 using Gs_Contability.Excepitons;
 using System.Net;
 using System.Text.Json;
@@ -34,25 +35,30 @@ namespace Gs_Contability.Middlewares
             {
                 await handleGernericException(context, e);
             }
+            catch (ValidationException e)
+            {
+                await handleValidationException(context, e);
+            }
         }
 
-        //private Task handleValidationException(HttpContext context, GernericException e)
-        //{
-        //    var body = new ValidationErrorResponse
-        //    {
-        //        Status = (int)HttpStatusCode.BadRequest,
-        //        Error = "Bad Request",
-        //        Cause = e.GetType().Name,
-        //        Message = "Validation Error",
-        //        Timestamp = DateTime.Now,
-        //        Errors = e.Errors.GroupBy(vf => vf.PropertyName)
-        //            .ToDictionary(g => g.Key, g => g.Select(vf => vf.ErrorMessage).ToArray())
-        //    };
+        private Task handleValidationException(HttpContext context, ValidationException e)
+        {
+            var body = new ValidationErrorResponse
+            {
+                Status = (int)HttpStatusCode.BadRequest,
+                Error = "Bad Request",
+                Cause = e.GetType().Name,
+                Message = "Validation Error",
+                Timestamp = DateTime.Now,
+                Errors = e.Errors.GroupBy(vf => vf.PropertyName)
+                    .ToDictionary(g => g.Key, g => g.Select(vf => vf.ErrorMessage).ToArray())
+            };
 
-        //    context.Response.StatusCode = body.Status;
-        //    context.Response.ContentType = "application/json";
-        //    return context.Response.WriteAsync(JsonSerializer.Serialize(body, _jsonSerializerOptions));
-        //}
+            context.Response.StatusCode = body.Status;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync(JsonSerializer.Serialize(body, _jsonSerializerOptions));
+        }
+
         private Task handleGernericException(HttpContext context, GernericException e)
         {
             var body = new ErrorResponse

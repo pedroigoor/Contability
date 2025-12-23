@@ -1,5 +1,6 @@
 ﻿
 
+using Gs_Contability.Dto.Users;
 using Gs_Contability.Repositories.Common.Pagination;
 
 namespace Gs_Contability.Services

@@ -7,6 +7,7 @@ builder.Services.RegisterDatabase();
 builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
 builder.Services.RegisterMappers();
+builder.Services.RegisterValidators();
 
 
 

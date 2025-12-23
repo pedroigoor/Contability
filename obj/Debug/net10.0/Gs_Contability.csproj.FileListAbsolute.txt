@@ -284,3 +284,4 @@ C:\Sistemas\GearTech\Projeto\Gs_Contability\bin\Debug\net10.0\zh-Hans\Microsoft.
 C:\Sistemas\GearTech\Projeto\Gs_Contability\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Sistemas\GearTech\Projeto\Gs_Contability\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 C:\Sistemas\GearTech\Projeto\Gs_Contability\obj\Debug\net10.0\Gs_Contability.sourcelink.json
+C:\Sistemas\GearTech\Projeto\Gs_Contability\bin\Debug\net10.0\BCrypt.Net-Next.dll

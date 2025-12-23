@@ -9,7 +9,7 @@ namespace Gs_Contability.Repositories
         PagedResult<Model> FindAllPaged(int page, int size);
         Task<Model> CreateAsync(Model model);
         Model? FindById(Key key);
-        Model Update(Model model);
+        Task<Model> Update(Model model);
         void DeleteById(Key key);
     }
 }

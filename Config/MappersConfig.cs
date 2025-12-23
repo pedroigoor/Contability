@@ -17,7 +17,8 @@ namespace Gs_Contability.Config
 
                 cfg.CreateMap<User, UserResponseDTO>();
                 cfg.CreateMap<UserResponseDTO, User>();
-
+                cfg.CreateMap<User, UserRequestUpdateDTO>();
+                cfg.CreateMap<UserRequestUpdateDTO, User>();
 
                 cfg.CreateMap<PagedResult<User>, PagedResult<UserResponseDTO>>()
                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));

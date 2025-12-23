@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-
+using FluentValidation;
 using Gs_Contability.Dto.Users;
 using Gs_Contability.Entities;
 using Gs_Contability.Excepitons;
 using Gs_Contability.Repositories.Common.Pagination;
 using Gs_Contability.Repositories.Users;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gs_Contability.Services.Users
 {
@@ -12,21 +13,26 @@ namespace Gs_Contability.Services.Users
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IValidator<UserRequestDTO> _userDtoValidator;
 
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, IValidator<UserRequestDTO> userDtoValidator)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _userDtoValidator = userDtoValidator;
         }
         public async Task<UserResponseDTO> CreateAsync(UserRequestDTO modelRequest)
         {
+            await Validate(modelRequest);
+
             var emailExists = await _userRepository.EmailExistsAsync(modelRequest.Email);
 
             if (emailExists)
                 throw new GernericException("Email já cadastrado");
 
             var model = _mapper.Map<User>(modelRequest);
+            model.PasswordHash = BCrypt.Net.BCrypt.HashPassword(modelRequest.PasswordHash);
             var createdModel = await _userRepository.CreateAsync(model);
             return _mapper.Map<UserResponseDTO>(createdModel);
 
@@ -34,7 +40,8 @@ namespace Gs_Contability.Services.Users
 
         public void DeleteById(int id)
         {
-            throw new NotImplementedException();
+            ExistsById(id);
+            _userRepository.DeleteById(id);
         }
 
         public PagedResult<UserResponseDTO> FindAll(int page, int size)
@@ -54,9 +61,15 @@ namespace Gs_Contability.Services.Users
             return _mapper.Map<UserResponseDTO>(model);
         }
 
-        public Task<UserResponseDTO> UpdateById(int id, UserRequestDTO modelRequest)
+        public async Task<UserResponseDTO> UpdateById(int id, UserRequestDTO modelRequest)
         {
-            throw new NotImplementedException();
+            ExistsById(id);
+
+            var jobToUpdate = _mapper.Map<User>(modelRequest);
+            jobToUpdate.Id = id;
+            var updatedJob = await _userRepository.Update(jobToUpdate);
+            return _mapper.Map<UserResponseDTO>(updatedJob);
+
         }
 
         private void ExistsById(int id)
@@ -67,6 +80,10 @@ namespace Gs_Contability.Services.Users
             }
         }
 
+        private async Task Validate(UserRequestDTO modelRequest)
+        {
+            await _userDtoValidator.ValidateAndThrowAsync(modelRequest);
+        }
 
     }
 }
